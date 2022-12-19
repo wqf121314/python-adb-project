@@ -1,7 +1,4 @@
-import time
-import sys
-import os
-import logging
+import time, sys, os, logging
 from logging import handlers
 from config import config
 

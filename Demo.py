@@ -1,7 +1,8 @@
-from ppadb.client import Client as AdbClient
+import os
 
 import utils.AdbUtils
 from utils import Logger
+from ppadb.client import Client as AdbClient
 
 
 class Demo:
@@ -16,13 +17,12 @@ class Demo:
         Logger.error("11111")
         Logger.critical("11111")
 
-    def test_adb(self):
+    def test_snapshot(self):
+        os.system('adb devices')
         # Default is "127.0.0.1" and 5037
-
         client = AdbClient(host="127.0.0.1", port=5037)
-        print(client.version())
+        # print(client.version())
         device = client.devices()[0]
-        # utils.PhoneUtils.take_snapshot(device)
         utils.AdbUtils.take_snapshot(device)
 
 
@@ -30,4 +30,4 @@ class Demo:
 if __name__ == '__main__':
     d = Demo()
     # d.testLogger()
-    d.test_adb()
+    d.test_snapshot()
