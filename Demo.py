@@ -18,12 +18,13 @@ class Demo:
         Logger.critical("11111")
 
     def test_snapshot(self):
-        os.system('adb devices')
+        # os.system('adb devices')
         # Default is "127.0.0.1" and 5037
         client = AdbClient(host="127.0.0.1", port=5037)
         # print(client.version())
         device = client.devices()[0]
         utils.AdbUtils.take_snapshot(device)
+        client.remote_disconnect()
 
 
 # test_adb()
