@@ -1,7 +1,8 @@
 from ppadb.client import Client as AdbClient
-import time, os
+import time, os, io
 from config import config
 from utils import Logger
+from utils import SwipeDirection
 
 
 class ADBUtils:
@@ -9,16 +10,42 @@ class ADBUtils:
         self.device = device
 
     def lock_screen(self):
+        self.take_snapshot()
         self.device.shell("input keyevent 26")
+        self.take_snapshot()
 
     def unlock_simple(self):
-        self.take_snapshot()
-        self.device.shell("input keyevent 26")
-        time.sleep(1)
-        self.take_snapshot()
-        self.device.shell("input swipe 540 1300 540 500 100")
+        if self.is_screen_lock():
+            self.take_snapshot()
+            self.device.shell("input keyevent 26")
+            time.sleep(0.2)
+            self.take_snapshot()
+            self.device.shell("input swipe 540 1300 540 500 100")
+            self.take_snapshot()
 
-        self.take_snapshot()
+    def swipe(self, direction):
+        match (direction):
+            case 'UP':
+                self.device.shell("input swipe 540 1300 540 500 100")
+            case 'up':
+                self.device.shell("input swipe 540 1300 540 500 100")
+            case _:
+                print('NONE')
+
+    def is_screen_lock(self):
+        '''
+        1、亮屏且有锁 showing=true和 screenState=SCREEN_STATE_ON
+        2、灭屏且有锁 showing=true和 screenState=SCREEN_STATE_OFF
+        3、亮屏且无锁 showing=false和screenState=SCREEN_STATE_ON
+        :return:
+        '''
+        result = self.device.shell("dumpsys window policy")
+        # Logger.debug(f'dumpsys window policy:{result}')
+        lines = result.splitlines()
+        for i in range(len(lines)):
+            if "showing=false" in lines[i]:
+                return False
+        return True
 
     def take_snapshot(self):
         time.sleep(1)
@@ -62,5 +89,10 @@ class ADBUtils:
 if __name__ == '__main__':
     device = AdbClient().devices()[0]
     adb = ADBUtils(device)
-    # adb.lock_screen()
     adb.unlock_simple()
+
+    # print(SwipeDirection.Enum.)
+    # adb.swipe("UP")
+    # time.sleep(5)
+    #
+    # adb.lock_screen()
