@@ -2,7 +2,6 @@ from ppadb.client import Client as AdbClient
 import time, os, io
 from config import config
 from utils import Logger
-from utils import SwipeDirection
 
 
 class ADBUtils:
@@ -24,11 +23,24 @@ class ADBUtils:
             self.take_snapshot()
 
     def swipe(self, direction):
+        print(direction)
         match (direction):
             case 'UP':
-                self.device.shell("input swipe 540 1300 540 500 100")
+                self.device.shell("input swipe 550 2000 550 1000 100")
+            case 'DOWN':
+                self.device.shell("input swipe 550 50 550 1000 100")
+            case 'LEFT':
+                self.device.shell("input swipe 50 1000 550 1000 100")
+            case 'RIGHT':
+                self.device.shell("input swipe 1000 1000 550 1000 100")
             case 'up':
-                self.device.shell("input swipe 540 1300 540 500 100")
+                self.device.shell("input swipe 550 2000 550 1000 100")
+            case 'down':
+                self.device.shell("input swipe 550 50 550 1000 100")
+            case 'left':
+                self.device.shell("input swipe 50 1000 550 1000 100")
+            case 'right':
+                self.device.shell("input swipe 1000 1000 550 1000 100")
             case _:
                 print('NONE')
 
@@ -89,10 +101,19 @@ class ADBUtils:
 if __name__ == '__main__':
     device = AdbClient().devices()[0]
     adb = ADBUtils(device)
-    adb.unlock_simple()
+    # adb.unlock_simple()
+    # device.shell("input swipe 440 1300 540 500 100")
+    # 向上
+    # device.shell("input swipe 550 2000 550 1000 100")
+    # 向下
+    # device.shell("input swipe 550 50 550 1000 100")
+    # 向左
+    # device.shell("input swipe 50 1000 550 1000 100")
+    # 向右
+    # device.shell("input swipe 1000 1000 550 1000 100")
 
     # print(SwipeDirection.Enum.)
-    # adb.swipe("UP")
+    adb.swipe("UP")
     # time.sleep(5)
     #
     # adb.lock_screen()
